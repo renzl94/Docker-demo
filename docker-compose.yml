@@ -1,16 +1,20 @@
 version: '3'
 services:
-  web:
-    build: .
+  influxdb:
+    image: influxdb:latest
     ports:
-      - "8080:8080"
-  db:
-    image: "mysql"
-    environment: 
-      MYSQL_ROOT_PASSWORD: password
-    volumes:
-      - db-data:/foo
+      - "8086:8086"
+    networks:
+      - app-network
 
-volumes:
-  db-data:
+  app:
+    build: .
+    depends_on:
+      - influxdb
+    networks:
+      - app-network
 
+networks:
+  app-network:
+    driver: bridge
+  
